@@ -38,11 +38,18 @@ class Post(models.Model):
     # 文章作者,User由django.contrib.auth.models导入
     author = models.ForeignKey(User)
 
+    # view字段以记录阅读量
+    views = models.PositiveIntegerField(default=0)
+
     def __str__(self):
         return self.title
 
     def get_absolute_url(self):
         return reverse('blog:detail', kwargs={'pk': self.pk})
+
+    def increase_views(self):
+        self.views += 1
+        self.save(update_fields=['views']) # 跟新数据库
 
     class Meta:
         ordering = ['-created_time']
