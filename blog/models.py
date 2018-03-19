@@ -2,6 +2,8 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.urls import reverse
 from django.utils.six import python_2_unicode_compatible
+from django.utils.html import strip_tags
+import markdown
 
 
 # Create your models here.
@@ -54,6 +56,18 @@ class Post(models.Model):
         '''
         self.views += 1
         self.save(update_fields=['views'])  # 跟新数据库
+
+    def save(self, *args, **kwargs):
+        if not self.excerpt:
+            md = markdown.Markdown(extensions=[
+                'markdown.extensions.extra',
+                'markdown.extensions.codehilite',
+            ])
+
+            self.excerpt = strip_tags(md.convert(self.body))[:54]
+
+        # 调用父类的save,将数据保存至数据库中
+        super(Post, self).save(*args, **kwargs)
 
     class Meta:
         ordering = ['-created_time']
