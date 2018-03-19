@@ -20,6 +20,9 @@ def detail(request, pk):
     file_path = 'blog/detail.html'
     post = get_object_or_404(Post, pk=pk)
 
+    # 阅读量+1
+    post.increase_views()
+
     # 使用md
     post.body = markdown.markdown(post.body,
                                   extensions=[

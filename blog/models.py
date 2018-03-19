@@ -48,8 +48,12 @@ class Post(models.Model):
         return reverse('blog:detail', kwargs={'pk': self.pk})
 
     def increase_views(self):
+        '''
+        阅读量+1
+        :return:
+        '''
         self.views += 1
-        self.save(update_fields=['views']) # 跟新数据库
+        self.save(update_fields=['views'])  # 跟新数据库
 
     class Meta:
         ordering = ['-created_time']
