@@ -21,7 +21,6 @@
             </header>
             <div class="entry-content clearfix">
                 <p>{{ post.body | truncatechars:54 }}</p> {# 使用truncatechars模板过滤器 #}
-
                 <div class="read-more cl-effect-14">
                     <a href="{{ post.get_absolute_url }}" class="more-`link">继续阅读 <span
                             class="meta-nav">→</span></a>
