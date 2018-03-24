@@ -1,5 +1,6 @@
 from django.shortcuts import render, get_object_or_404
 from django.http import HttpResponse
+from django.views.generic import ListView
 from .models import Post
 from comments.forms import CommentForm
 import markdown
@@ -8,12 +9,16 @@ from .models import Post, Category
 
 # Create your views here.
 
-def index(request):
-    file_path = 'blog/index.html'
-    post_list = Post.objects.all().order_by('-created_time')
-    return render(request, file_path, context={
-        'post_list': post_list
-    })
+# def index(request):
+#     file_path = 'blog/index.html'
+#     post_list = Post.objects.all().order_by('-created_time')
+#     return render(request, file_path, context={
+#         'post_list': post_list
+#     })
+class IndexView(ListView):
+    model = Post
+    template_name = 'blog/index.html'
+    context_object_name = 'post_list'
 
 
 def detail(request, pk):
