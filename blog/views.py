@@ -16,9 +16,9 @@ from .models import Post, Category
 #         'post_list': post_list
 #     })
 class IndexView(ListView):
-    model = Post
-    template_name = 'blog/index.html'
-    context_object_name = 'post_list'
+    model = Post  # 获取模型为Post
+    template_name = 'blog/index.html'  # 指定渲染模板(路径)
+    context_object_name = 'post_list'  # 模型列表实例化
 
 
 def detail(request, pk):
