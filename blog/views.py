@@ -27,6 +27,9 @@ class IndexView(ListView):
     template_name = 'blog/index.html'  # 指定渲染模板(路径)
     context_object_name = 'post_list'  # 模型列表实例化
 
+    # 指定分页功能
+    paginate_by = 10
+
 
 def detail(request, pk):
     file_path = 'blog/detail.html'
