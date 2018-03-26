@@ -30,6 +30,85 @@ class IndexView(ListView):
     # 指定分页功能
     paginate_by = 10
 
+    def get_context_data(self, **kwargs):
+        '''
+
+        :param kwargs:
+        :return:
+        '''
+        context = super().get_context_data(**kwargs)
+
+        paginator = context.get('paginator')
+        page = context.get('page_obj')
+        is_paginated = context.get('is_paginated')
+        pagination_data = self.pagination_data(paginator, page, is_paginated)
+
+        # 将分页导航条的模板变量更新到context中
+        context.update(pagination_data)
+
+        # 将更新后的 context 返回，以便 ListView 使用这个字典中的模板变量去渲染模板。
+        return context
+
+    def pagination_data(self, paginator, page, is_paginated):
+        if not is_paginated:
+            return {}
+        left = []  # 左起页码
+        right = []  # 右起页码
+
+        first = False  # 首页页码是否显示
+        last = False  # 尾页页码是否显示
+
+        left_has_more = False  # 首页后是否显示省略号
+        right_has_more = False  # 尾页后是否显示省略号
+
+        page_number = page.number  # 当前页码
+        total_pages = paginator.num_pages  # 页码总数
+        page_range = paginator.page_range  # 页码列表
+
+        if page_number == 1:
+            right = page_range[page_number:page_number + 2]
+
+            if right[-1] < total_pages - 1:
+                right_has_more = True
+
+            if right[-1] < total_pages:
+                last = True
+
+        elif page_number == total_pages:
+            left = page_range[(page_number - 3) if (page_number - 3) > 0 else 0: page_number - 1]
+            if left[0] > 2:
+                left_has_more = True
+
+            if left[0] > 1:
+                first = True
+
+        else:
+            left = page_range[(page_number - 3) if (page_number - 3) > 0 else 0:page_number - 1]
+            right = page_range[page_number:page_number + 2]
+
+            # 是否需要显示最后一页和最后一页前的省略号
+            if right[-1] < total_pages - 1:
+                right_has_more = True
+            if right[-1] < total_pages:
+                last = True
+
+            # 是否需要显示第 1 页和第 1 页后的省略号
+            if left[0] > 2:
+                left_has_more = True
+            if left[0] > 1:
+                first = True
+
+        data = {
+            'left': left,
+            'right': right,
+            'left_has_more': left_has_more,
+            'right_has_more': right_has_more,
+            'first': first,
+            'last': last,
+        }
+
+        return data
+
 
 def detail(request, pk):
     file_path = 'blog/detail.html'
