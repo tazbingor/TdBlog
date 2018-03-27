@@ -3,7 +3,9 @@
 # 存放自定义文档标签
 
 from django import template
-from ..models import Post, Category
+from django.db.models.aggregates import Count
+
+from blog.models import Post, Category
 
 register = template.Library()
 
@@ -29,4 +31,7 @@ def archives():
 
 @register.simple_tag
 def get_categories():
-    return Category.objects.all()
+    '''
+    :return:
+    '''
+    return Category.objects.annotate(num_posts=Count('post')).filter(num_posts_gt=0)
