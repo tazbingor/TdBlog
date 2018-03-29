@@ -35,4 +35,4 @@ def get_categories():
     '''
     :return:
     '''
-    return Category.objects.annotate(num_posts=Count('post')).filter(num_posts_gt=0)
+    return Category.objects.annotate(num_posts=Count('post')).filter(num_posts__gt=0)
